@@ -3,8 +3,8 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div>
-      <Image src="/logo.svg" height={50} width={50} alt="logo" />
-      <h3>YouTube</h3>
+      <h1>hii</h1>
+      <p>you are on homepage</p>
     </div>
   );
 }
