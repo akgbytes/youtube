@@ -1,3 +1,4 @@
+import ThemeIcon from "@/components/theme-icon";
 import Image from "next/image";
 
 export default function Home() {

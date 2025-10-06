@@ -1,8 +1,9 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import Image from "next/image";
 import Link from "next/link";
 import SearchInput from "./search-input";
 import AuthButton from "@/modules/auth/ui/components/auth-button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import AppLogo from "@/components/app-logo";
 
 const HomeNavbar = () => {
   return (
@@ -13,7 +14,7 @@ const HomeNavbar = () => {
           <SidebarTrigger />
           <Link href="/">
             <div className="flex items-center gap-1 p-4">
-              <Image src="/logo.svg" height={32} width={32} alt="logo" />
+              <AppLogo />
               <h3 className="font-semibold text-xl tracking-tight">YouTube</h3>
             </div>
           </Link>
@@ -26,6 +27,7 @@ const HomeNavbar = () => {
 
         {/* Auth button */}
         <div className="flex items-center gap-4 shrink-0">
+          <ThemeToggle />
           <AuthButton />
         </div>
       </div>
