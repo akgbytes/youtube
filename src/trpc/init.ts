@@ -1,6 +1,6 @@
 import superjson from "superjson";
 import { db } from "@/db";
-import { usersTable } from "@/db/schema/user.schema";
+import { usersTable } from "@/db/schema/users";
 import { auth } from "@clerk/nextjs/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
