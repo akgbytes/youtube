@@ -1,18 +1,28 @@
 import { HydrateClient, trpc } from "@/trpc/server";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import PageClient from "./client";
+import HomeView from "@/modules/home/ui/views/home-view";
 
-export default function Home() {
-  void trpc.categories.getAll.prefetch();
+/**
+ * By default, Next.js tries to statically optimize pages means it renders them at build time
+ * but since we're calling `trpc.categories.getAll.prefetch()` we need to disable static
+ * optimization and force this page to render on the server at request time.
+ */
+
+export const dynamic = "force-dynamic";
+
+interface PageProps {
+  searchParams: Promise<{
+    categoryId?: string;
+  }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const { categoryId } = await searchParams;
+
+  await trpc.categories.getAll.prefetch();
 
   return (
     <HydrateClient>
-      <Suspense fallback={<p>Loading...</p>}>
-        <ErrorBoundary fallback={<p>Error...</p>}>
-          <PageClient />
-        </ErrorBoundary>
-      </Suspense>
+      <HomeView categoryId={categoryId} />
     </HydrateClient>
   );
 }
