@@ -1,5 +1,6 @@
 "use client";
 
+import FilterCarousel from "@/components/filter-carousel";
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -21,12 +22,16 @@ const CategoriesSection = ({ categoryId }: CategoriesSectionProps) => {
 
 // Actual query lives here — this is what can "throw"
 const CategoriesSectionSuspense = ({ categoryId }: CategoriesSectionProps) => {
-  const [data] = trpc.categories.getAll.useSuspenseQuery();
+  const [categories] = trpc.categories.getAll.useSuspenseQuery();
+
+  const data = categories.map(({ name, id }) => ({
+    value: id,
+    label: name,
+  }));
+
   return (
     <div>
-      {data.map((category) => (
-        <p key={category.name}>{category.name}</p>
-      ))}
+      <FilterCarousel value={categoryId} data={data} />
     </div>
   );
 };
