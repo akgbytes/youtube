@@ -1,5 +1,15 @@
+import { DEFAULT_LIMIT } from "@/app/constants";
+import StudioView from "@/modules/studio/ui/view/studio-view";
+import { HydrateClient, trpc } from "@/trpc/server";
+
 interface PageProps {}
 
 export default function Page({}: PageProps) {
-  return <div>Studio page</div>;
+  void trpc.studio.getMany.prefetchInfinite({ limit: DEFAULT_LIMIT });
+
+  return (
+    <HydrateClient>
+      <StudioView />
+    </HydrateClient>
+  );
 }
