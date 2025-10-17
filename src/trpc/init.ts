@@ -35,6 +35,8 @@ export const protectedProcedure = t.procedure.use(async function isLoggedIn(
 ) {
   const { ctx } = opts;
 
+  console.log("ctx: ", ctx);
+
   if (!ctx.clerkUserId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
