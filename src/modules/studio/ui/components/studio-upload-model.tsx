@@ -26,8 +26,8 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
       <ResponsiveModal
         title="Upload"
         open={!!create.data}
-        onOpenChange={() => {
-          create.reset();
+        onOpenChange={(open) => {
+          if (!open) create.reset();
         }}
       >
         <p>Test modal</p>
