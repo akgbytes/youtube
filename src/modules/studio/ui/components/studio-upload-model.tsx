@@ -1,5 +1,6 @@
 "use client";
 
+import ResponsiveModal from "@/components/responsive-modal";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { trpc } from "@/trpc/client";
@@ -21,16 +22,27 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
   });
 
   return (
-    <Button
-      variant="secondary"
-      onClick={() => {
-        create.mutate();
-      }}
-      disabled={create.isPending}
-    >
-      {create.isPending ? <Spinner /> : <IconPlus />}
-      <span>Create</span>
-    </Button>
+    <>
+      <ResponsiveModal
+        title="Upload"
+        open={!!create.data}
+        onOpenChange={(open) => {
+          if (!open) create.reset();
+        }}
+      >
+        <p>Test modal</p>
+      </ResponsiveModal>
+      <Button
+        variant="secondary"
+        onClick={() => {
+          create.mutate();
+        }}
+        disabled={create.isPending}
+      >
+        {create.isPending ? <Spinner /> : <IconPlus />}
+        <span>Create</span>
+      </Button>
+    </>
   );
 };
 

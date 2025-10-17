@@ -9,7 +9,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
