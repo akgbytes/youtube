@@ -15,7 +15,7 @@ const VideosSection = ({}: VideosSectionProps) => {
     }
   );
 
-  return <div>VideosSection</div>;
+  return <div>{JSON.stringify(data)}</div>;
 };
 
 export default VideosSection;
