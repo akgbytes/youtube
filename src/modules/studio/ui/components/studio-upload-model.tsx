@@ -6,6 +6,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { trpc } from "@/trpc/client";
 import { IconPlus } from "@tabler/icons-react";
 import { toast } from "sonner";
+import StudioUploader from "./studio-uploader";
+import { Loader2Icon } from "lucide-react";
 
 interface StudioUploadModelProps {}
 
@@ -25,12 +27,16 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
     <>
       <ResponsiveModal
         title="Upload"
-        open={!!create.data}
+        open={!!create.data?.url}
         onOpenChange={(open) => {
           if (!open) create.reset();
         }}
       >
-        <p>Test modal</p>
+        {create.data?.url ? (
+          <StudioUploader endpoint={create.data.url} onSuccess={() => {}} />
+        ) : (
+          <Loader2Icon />
+        )}
       </ResponsiveModal>
       <Button
         variant="secondary"
