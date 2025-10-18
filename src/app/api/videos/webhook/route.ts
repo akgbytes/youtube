@@ -30,16 +30,17 @@ export const POST = async (request: Request) => {
     return new Response("No signature found", { status: 401 });
   }
 
-  const payload = await request.json();
-  const body = JSON.stringify(payload);
-
-  mux.webhooks.verifySignature(
-    body,
-    {
-      "mux-signature": muxSignature,
-    },
-    SIGNING_SECRET
-  );
+  const rawBody = await request.text();
+  try {
+    mux.webhooks.verifySignature(
+      rawBody,
+      { "mux-signature": muxSignature },
+      SIGNING_SECRET
+    );
+  } catch {
+    return new Response("Invalid signature", { status: 401 });
+  }
+  const payload = JSON.parse(rawBody);
 
   switch (payload.type as WebhookEvent["type"]) {
     case "video.asset.created": {
