@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { usersTable } from "./users";
 import { categoriesTable } from "./categories";
+import { timestamps } from "./column-helper";
 
 export const videoVisibility = pgEnum("video_visibility", [
   "private",
@@ -36,6 +37,5 @@ export const videosTable = pgTable("videos", {
   muxTrackId: text("mux_track_id").unique(),
   muxTrackStatus: text("mux_track_status"),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  ...timestamps,
 });

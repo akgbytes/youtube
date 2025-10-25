@@ -5,14 +5,14 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { timestamps } from "./column-helper";
 
 export const categoriesTable = pgTable(
   "categories",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    ...timestamps,
   },
   (t) => [uniqueIndex("name_idx").on(t.name)]
 );
