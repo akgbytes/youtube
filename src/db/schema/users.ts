@@ -5,6 +5,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { timestamps } from "./column-helper";
 
 export const usersTable = pgTable(
   "users",
@@ -13,8 +14,7 @@ export const usersTable = pgTable(
     clerkId: text("clerk_id").notNull().unique(),
     name: text("name").notNull(),
     imageUrl: text("image_url").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    ...timestamps,
   },
   (t) => [uniqueIndex("clerk_id_idx").on(t.clerkId)]
 );
