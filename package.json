@@ -7,8 +7,9 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "dev:webhook": "ngrok http 3000",
-    "dev:all": "concurrently \"pnpm run dev\" \"pnpm run dev:webhook\""
+    "ngrok": "ngrok http 3000",
+    "drizzle": "npx drizzle-kit studio",
+    "all": "concurrently \"pnpm run dev\" \"pnpm run ngrok\" \"pnpm run drizzle\" "
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.2",
@@ -32,6 +33,7 @@
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
     "embla-carousel-react": "^8.6.0",
