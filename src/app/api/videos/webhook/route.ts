@@ -114,13 +114,12 @@ export const POST = async (request: Request) => {
 
       console.log("Deleting video :", data.upload_id);
 
-      if (!data.upload_id) {
-        return new Response("Missing upload ID", { status: 400 });
-      }
+      const whereBy = data.upload_id
+        ? eq(videosTable.muxUploadId, data.upload_id)
+        : eq(videosTable.muxAssetId, data.id);
 
-      await db
-        .delete(videosTable)
-        .where(eq(videosTable.muxUploadId, data.upload_id));
+      await db.delete(videosTable).where(whereBy);
+      break;
     }
   }
 
