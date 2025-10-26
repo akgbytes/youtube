@@ -200,7 +200,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
                     <SelectContent className="w-full">
                       {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.name}>
+                        <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>
                       ))}

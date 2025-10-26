@@ -26,10 +26,11 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
   });
 
   const onSuccess = () => {
-    if (!create.data?.video.id) return;
+    const id = create.data?.video.id;
+    if (!id) return;
 
     create.reset();
-    router.push(`/studio/videos/${create.data.video.id}`);
+    router.push(`/studio/videos/${id}`);
   };
 
   return (
