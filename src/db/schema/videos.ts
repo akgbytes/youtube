@@ -1,14 +1,12 @@
-import {
-  pgTable,
-  uuid,
-  text,
-  timestamp,
-  integer,
-  pgEnum,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, integer, pgEnum } from "drizzle-orm/pg-core";
 import { usersTable } from "./users";
 import { categoriesTable } from "./categories";
 import { timestamps } from "./column-helper";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-zod";
 
 export const videoVisibility = pgEnum("video_visibility", [
   "private",
@@ -39,3 +37,7 @@ export const videosTable = pgTable("videos", {
 
   ...timestamps,
 });
+
+export const videoSelectSchema = createSelectSchema(videosTable);
+export const videoInsertSchema = createInsertSchema(videosTable);
+export const videoUpdateSchema = createUpdateSchema(videosTable);

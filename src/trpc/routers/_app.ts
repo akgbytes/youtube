@@ -5,7 +5,7 @@ import { studioRouter } from "./studio/procedures";
 import { videosRouter } from "./videos/procedures";
 export const appRouter = createTRPCRouter({
   studio: studioRouter,
-  video: videosRouter,
+  videos: videosRouter,
   categories: categoriesRouter,
 });
 // export type definition of API

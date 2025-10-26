@@ -16,5 +16,10 @@ export const formatDuration = (duration: number) => {
 
 export const capitalize = (str: string) => {
   if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  const words = str.split(/[\s_-]+/);
+  const capitalized = words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+
+  return capitalized;
 };
