@@ -8,12 +8,14 @@ import { IconPlus } from "@tabler/icons-react";
 import { toast } from "sonner";
 import StudioUploader from "./studio-uploader";
 import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface StudioUploadModelProps {}
 
 const StudioUploadModel = ({}: StudioUploadModelProps) => {
+  const router = useRouter();
   const utils = trpc.useUtils();
-  const create = trpc.video.create.useMutation({
+  const create = trpc.videos.create.useMutation({
     onSuccess: () => {
       toast.success("Video created successfully");
       utils.studio.getMany.invalidate();
@@ -22,6 +24,14 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
       toast.error(error.message);
     },
   });
+
+  const onSuccess = () => {
+    const id = create.data?.video.id;
+    if (!id) return;
+
+    create.reset();
+    router.push(`/studio/videos/${id}`);
+  };
 
   return (
     <>
@@ -33,7 +43,7 @@ const StudioUploadModel = ({}: StudioUploadModelProps) => {
         }}
       >
         {create.data?.url ? (
-          <StudioUploader endpoint={create.data.url} onSuccess={() => {}} />
+          <StudioUploader endpoint={create.data.url} onSuccess={onSuccess} />
         ) : (
           <Loader2Icon />
         )}

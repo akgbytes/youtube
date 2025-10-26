@@ -127,6 +127,7 @@ export const POST = async (request: Request) => {
         asset_id: string;
       };
 
+      // typescript incorrectly says that data does not have asset_id
       const assetId = data.asset_id;
       const trackId = data.id;
       const status = data.status;
