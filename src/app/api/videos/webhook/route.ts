@@ -77,7 +77,6 @@ export const POST = async (request: Request) => {
       }
 
       const tempThumbnail = `https://image.mux.com/${playbackId}/thumbnail.png`;
-
       const tempPreview = `https://image.mux.com/${playbackId}/animated.gif`;
 
       const utapi = new UTApi();

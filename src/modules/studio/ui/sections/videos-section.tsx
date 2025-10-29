@@ -1,6 +1,6 @@
 "use client";
 
-import { DEFAULT_LIMIT } from "@/app/constants";
+import { DEFAULT_LIMIT } from "@/constants";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { trpc } from "@/trpc/client";
 import { Suspense } from "react";
