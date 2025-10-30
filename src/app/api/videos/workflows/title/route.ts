@@ -33,7 +33,18 @@ export const { POST } = serve(async (context) => {
   const transcript = await context.run("get-transcript", async () => {
     const trackUrl = `https://stream.mux.com/${video.muxPlaybackId}/text/${video.muxTrackId}.txt`;
     const response = await fetch(trackUrl);
-    return await response.text();
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transcript: ${response.statusText}`);
+    }
+
+    const text = await response.text();
+
+    if (!text || text.trim().length === 0) {
+      throw new Error("Transcript is empty");
+    }
+
+    return text;
   });
 
   const { status, body } = await context.api.openai.call("generate-title", {
