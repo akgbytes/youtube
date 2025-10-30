@@ -23,6 +23,10 @@ export const { POST } = serve(async (context) => {
       throw new Error("Not found");
     }
 
+    if (!existingVideo.muxPlaybackId || !existingVideo.muxTrackId) {
+      throw new Error("Video transcript not available");
+    }
+
     return existingVideo;
   });
 
