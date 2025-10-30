@@ -65,6 +65,10 @@ export const { POST } = serve(async (context) => {
     },
   });
 
+  if (status !== 200 || !body.choices || body.choices.length === 0) {
+    throw new Error("Failed to generate title from OpenAI");
+  }
+
   const title = body.choices[0]?.message.content;
 
   await context.run("update-video", async () => {
