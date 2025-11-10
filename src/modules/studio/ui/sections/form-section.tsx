@@ -49,6 +49,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import ThumbnailUploadModel from "../components/thumbnail-upload-model";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ThumbnailGenerateModel from "../components/thumbnail-generate-model";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FormSectionProps {
   videoId: string;
@@ -64,13 +67,74 @@ const FormSection = ({ videoId }: FormSectionProps) => {
   );
 };
 
-const FormSectionSkeleton = () => <div>loading...</div>;
+const FormSectionSkeleton = () => {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <Skeleton className="h-9 w-24" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="space-y-8 lg:col-span-3">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-[220px] w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-[84px] w-[153px]" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          <div className="flex flex-col gap-4 bg-[#f9f9f9] rounded-xl overflow-hidden">
+            <Skeleton className="aspect-video" />
+            <div className="p-4 space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
+  const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] =
+    useState(false);
 
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
@@ -111,20 +175,10 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
   });
 
-  const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
-    onSuccess: () => {
-      toast.success("Background job started", {
-        description: "This may take some time",
-      });
-    },
-
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const generateTitle = trpc.videos.generateTitle.useMutation({
     onSuccess: () => {
+      +utils.studio.getOne.invalidate({ id: videoId });
+      +utils.studio.getMany.invalidate();
       toast.success("Background job started", {
         description: "This may take some time",
       });
@@ -137,6 +191,8 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const generateDescription = trpc.videos.generateDescription.useMutation({
     onSuccess: () => {
+      +utils.studio.getOne.invalidate({ id: videoId });
+      +utils.studio.getMany.invalidate();
       toast.success("Background job started", {
         description: "This may take some time",
       });
@@ -149,6 +205,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     defaultValues: video,
+    resolver: zodResolver(videoUpdateSchema),
   });
 
   const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
@@ -183,7 +240,10 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               </p>
             </div>
             <div className="flex items-center gap-x-2">
-              <Button type="submit" disabled={update.isPending}>
+              <Button
+                type="submit"
+                disabled={update.isPending || !form.formState.isDirty}
+              >
                 Save
               </Button>
 
@@ -260,7 +320,9 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                             generateDescription.mutate({ id: videoId })
                           }
                           disabled={
-                            generateDescription.isPending || !video.muxTrackId
+                            generateTitle.isPending ||
+                            !video.muxTrackId ||
+                            video.muxTrackStatus !== "ready"
                           }
                         >
                           {generateDescription.isPending ? (
@@ -319,7 +381,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
-                                generateThumbnail.mutate({ id: videoId })
+                                setThumbnailGenerateModalOpen(true)
                               }
                             >
                               <SparklesIcon className="size-4 mr-1" />
@@ -471,6 +533,12 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
       <ThumbnailUploadModel
         open={thumbnailModalOpen}
         onOpenChange={setThumbnailModalOpen}
+        videoId={videoId}
+      />
+
+      <ThumbnailGenerateModel
+        open={thumbnailGenerateModalOpen}
+        onOpenChange={setThumbnailGenerateModalOpen}
         videoId={videoId}
       />
     </>
